@@ -4,15 +4,15 @@
     <string name="app_name">Memorizer</string>
     <string name="start">Start</string>
 
-    <color name="light_red">#e74c3c</color>
-    <color name="red">#c0392b</color>
+    <color name="light_red">#FF4444</color>
+    <color name="red">#CC0000</color>
 
-    <color name="light_green">#2ecc71</color>
-    <color name="green">#27ae60</color>
+    <color name="light_green">#99CC00</color>
+    <color name="green">#669900</color>
 
-    <color name="light_yellow">#f1c40f</color>
-    <color name="yellow">#f39c12</color>
+    <color name="light_yellow">#FFBB33</color>
+    <color name="yellow">#FF8800</color>
 
-    <color name="light_blue">#3498db</color>
-    <color name="blue">#2980b9</color>
+    <color name="light_blue">#33B5E5</color>
+    <color name="blue">#0099CC</color>
 </resources>
