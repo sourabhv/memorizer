@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Memorizer</string>
+    <string name="start">Start</string>
+
+    <color name="red">#e74c3c</color>
+    <color name="green">#2ecc71</color>
+    <color name="yellow">#f1c40f</color>
+    <color name="blue">#3498db</color>
+</resources>
