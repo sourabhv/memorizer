@@ -15,11 +15,6 @@ public class ColorView extends Button {
         TransitionDrawable transition = (TransitionDrawable) getBackground();
         transition.startTransition(300);
         transition.reverseTransition(500);
-        try {
-            Thread.sleep(800);
-        } catch(InterruptedException ie) {
-            // hope that this never happens
-        }
     }
 
 }
