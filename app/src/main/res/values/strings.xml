@@ -3,6 +3,9 @@
 
     <string name="app_name">Memorizer</string>
     <string name="start">Start</string>
+    <string name="score">Score:\u0020</string>
+    <string name="gameover">Game Over</string>
+    <string name="gameovermessage">Your score is:\u0020</string>
 
     <color name="light_red">#FF4444</color>
     <color name="red">#CC0000</color>

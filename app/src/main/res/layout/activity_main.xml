@@ -17,17 +17,28 @@
             android:weightSum="2"
             android:orientation="horizontal">
 
-            <View
+            <contagious.apps.memorizer.ColorView
+                android:id="@+id/red"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:background="@color/red" />
+                android:background="@drawable/blinkanimation_red"
+                android:tag="0"
+                android:onClick="onColorViewClick"
+                android:repeatMode="reverse"
+                android:repeatCount="2" />
 
-            <View
+            <contagious.apps.memorizer.ColorView
+                android:id="@+id/green"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:background="@color/green" />
+                android:background="@drawable/blinkanimation_green"
+                android:tag="1"
+                android:onClick="onColorViewClick"
+                android:repeatMode="reverse"
+                android:repeatCount="2" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -35,31 +46,53 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:weightSum="2"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:onClick="onColorViewClick" >
 
-            <View
+            <contagious.apps.memorizer.ColorView
+                android:id="@+id/yellow"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:background="@color/yellow" />
+                android:background="@drawable/blinkanimation_yellow"
+                android:tag="2"
+                android:repeatMode="reverse"
+                android:repeatCount="2" />
 
-            <View
+            <contagious.apps.memorizer.ColorView
+                android:id="@+id/blue"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:background="@color/blue" />
+                android:background="@drawable/blinkanimation_blue"
+                android:tag="3"
+                android:onClick="onColorViewClick"
+                android:repeatMode="reverse"
+                android:repeatCount="2" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <TextView
+    <Button
+        android:id="@+id/startButton"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:background="@drawable/roundtextview"
         android:text="@string/start"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:gravity="center"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:onClick="startButtonClick" />
+
+    <TextView
+        android:id="@+id/deletemelater"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="TestString"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center"/>
 
 </RelativeLayout>
