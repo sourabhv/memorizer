@@ -3,8 +3,10 @@ package contagious.apps.memorizer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,17 +22,21 @@ public class MainActivity extends Activity {
 
     public static final int SET_TO_START = 0;
     public static final int SET_TO_SCORE = 1;
+    public static final String HIGHSCORE_TAG = "highscore";
+    public static final String NONE = "none";
 
-    public static TextView tv;
-
-    private Button startButton;
-    private List<ColorView> colorViewList;
-    private List<Integer> realPattern;
-    private List<Integer> userPattern;
-    private Random random;
     private boolean inputMode = false;
     private boolean gameRunning = false;
     private int score = 0;
+    private int highscore;
+    private Random random = new Random();;
+
+    private List<ColorView> colorViewList;
+    private List<Integer> realPattern;
+    private List<Integer> userPattern;
+    private Button startButton;
+    private TextView highscoreview;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +48,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tv = (TextView) findViewById(R.id.deletemelater);
-        startButton = (Button) findViewById(R.id.startButton);
         colorViewList = new ArrayList<ColorView>();
         colorViewList.add((ColorView) findViewById(R.id.red));
         colorViewList.add((ColorView) findViewById(R.id.green));
@@ -51,7 +55,32 @@ public class MainActivity extends Activity {
         colorViewList.add((ColorView) findViewById(R.id.blue));
         realPattern = new ArrayList<Integer>();
         userPattern = new ArrayList<Integer>();
-        random = new Random();
+        startButton = (Button) findViewById(R.id.startButton);
+        highscoreview = (TextView) findViewById(R.id.highscoreview);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        highscore = getHighscore();
+        displayHighscore();
+    }
+
+    private int getHighscore() {
+        String hs = sharedPreferences.getString(HIGHSCORE_TAG, NONE);
+        if (hs.equals(NONE)) {
+            setHighscore(0);
+            return 0;
+        }
+        return Integer.parseInt(hs);
+    }
+
+    private void setHighscore(int hs) {
+        SharedPreferences.Editor editor= sharedPreferences.edit();
+        editor.putString(HIGHSCORE_TAG, Integer.toString(hs));
+        editor.commit();
+    }
+
+    private void displayHighscore() {
+        String hs = Integer.toString(highscore);
+        highscoreview.setText(getResources().getString(R.string.highscore) + hs);
     }
 
     private void updateButton (int mode) {
@@ -76,14 +105,19 @@ public class MainActivity extends Activity {
         userPattern.clear();
         gameRunning = false;
         inputMode = false;
-        // reset score
+        // handle score
+        if (score > highscore) {
+            highscore = score;
+            setHighscore(highscore);
+            displayHighscore();
+        }
         score = 0;
         updateButton(SET_TO_START);
     }
 
 
     private void addNewPatternStep() {
-        int next = random.nextInt(4);
+        int next = random.nextInt(colorViewList.size());
         realPattern.add(next);
     }
 
@@ -105,7 +139,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         if (Build.VERSION.SDK_INT > 10) {
-            // set UI visibility
+            // set UI visibility flags
             getWindow().getDecorView()
                     .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -143,7 +177,7 @@ public class MainActivity extends Activity {
                     gameReset();
                 }
             } catch (Exception e) {
-                // do nothing
+                // should never happen
             }
         }
     }

@@ -1,7 +1,7 @@
 package contagious.apps.memorizer;
 
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.util.AttributeSet;
 import android.widget.Button;
 
@@ -12,12 +12,14 @@ public class ColorView extends Button {
     }
 
     public void blink() {
-        String tag = getTag().toString();
-        String str = "ColorView: " + tag;
-        MainActivity.tv.setText(str);
-
-        AnimationDrawable animation = (AnimationDrawable) this.getBackground();
-        animation.start();
+        TransitionDrawable transition = (TransitionDrawable) getBackground();
+        transition.startTransition(300);
+        transition.reverseTransition(500);
+        try {
+            Thread.sleep(800);
+        } catch(InterruptedException ie) {
+            // hope that this never happens
+        }
     }
 
 }
