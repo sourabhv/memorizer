@@ -4,16 +4,21 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,7 +35,8 @@ public class MainActivity extends Activity {
     private boolean gameRunning = false;
     private int score = 0;
     private int highscore;
-    private Random random = new Random();;
+    private Random random = new Random();
+    private int sounds[] = new int[]{-1, -1, -1, -1};
 
     private List<ColorView> colorViewList;
     private List<Integer> realPattern;
@@ -38,6 +44,7 @@ public class MainActivity extends Activity {
     private Button startButton;
     private TextView highscoreview;
     private SharedPreferences sharedPreferences;
+    private SoundPool soundPool;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         colorViewList = new ArrayList<ColorView>();
         colorViewList.add((ColorView) findViewById(R.id.red));
         colorViewList.add((ColorView) findViewById(R.id.green));
@@ -62,6 +71,24 @@ public class MainActivity extends Activity {
 
         highscore = getHighscore();
         displayHighscore();
+
+        // load sounds in sound pool
+
+        try {
+            // get assetFileDescriptors
+            AssetFileDescriptor beep1 = getAssets().openFd("beep1.ogg");
+            AssetFileDescriptor beep2 = getAssets().openFd("beep2.ogg");
+            AssetFileDescriptor beep3 = getAssets().openFd("beep3.ogg");
+            AssetFileDescriptor beep4 = getAssets().openFd("beep4.ogg");
+            // load into soundPool
+            sounds[0] = soundPool.load(beep1, 1);
+            sounds[1] = soundPool.load(beep2, 1);
+            sounds[2] = soundPool.load(beep3, 1);
+            sounds[3] = soundPool.load(beep4, 1);
+        } catch (IOException e) {
+            Log.d("SoundPool", "File opening error");
+            e.printStackTrace();
+        }
     }
 
     private int getHighscore() {
@@ -76,7 +103,7 @@ public class MainActivity extends Activity {
     private void setHighscore(int hs) {
         SharedPreferences.Editor editor= sharedPreferences.edit();
         editor.putString(HIGHSCORE_TAG, Integer.toString(hs));
-        editor.commit();
+        editor.apply();
     }
 
     private void displayHighscore() {
@@ -130,13 +157,13 @@ public class MainActivity extends Activity {
         // update score on center button
         updateButton(SET_TO_SCORE);
 
-        // flash all colorviews one by one
+        // flash all colorViews one by one
         int timeDelay = 800;
         for (final Integer x: realPattern) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    // add sound play
+                    soundPool.play(sounds[x], 1.0f, 1.0f, 0, 0, 1);
                     colorViewList.get(x).blink();
                 }
             }, timeDelay);
@@ -177,6 +204,7 @@ public class MainActivity extends Activity {
                 if (realPattern.get(userPattern.size()) == tag) {
                     // correct colorView selected
                     userPattern.add(tag);
+                    soundPool.play(sounds[tag], 1.0f, 1.0f, 0, 0, 1);
                     colorViewList.get(tag).blink();
                     if (realPattern.size() == userPattern.size()) {
                         // one more point!
