@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -89,6 +90,13 @@ public class MainActivity extends Activity {
             Log.d("SoundPool", "File opening error");
             e.printStackTrace();
         }
+
+        // set startButton size
+        int len = (int) (getResources().getDisplayMetrics().widthPixels * 0.4);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) startButton.getLayoutParams();
+        params.width = len;
+        params.height = len;
+        startButton.setLayoutParams(params);
     }
 
     private int getHighscore() {
