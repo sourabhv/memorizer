@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
@@ -129,8 +130,18 @@ public class MainActivity extends Activity {
         // update score on center button
         updateButton(SET_TO_SCORE);
 
-        for (Integer x: realPattern)
-            colorViewList.get(x).blink();
+        // flash all colorviews one by one
+        int timeDelay = 800;
+        for (final Integer x: realPattern) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // add sound play
+                    colorViewList.get(x).blink();
+                }
+            }, timeDelay);
+            timeDelay += 800;
+        }
 
         inputMode = true;
     }
