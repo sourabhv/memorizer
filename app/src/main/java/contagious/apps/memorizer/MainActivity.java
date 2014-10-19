@@ -158,7 +158,7 @@ public class MainActivity extends Activity {
         updateButton(SET_TO_SCORE);
 
         // flash all colorViews one by one
-        int timeDelay = 800;
+        int timeDelay = 1500; // initial delay before starting transitions
         for (final Integer x: realPattern) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -167,10 +167,15 @@ public class MainActivity extends Activity {
                     colorViewList.get(x).blink();
                 }
             }, timeDelay);
-            timeDelay += 800;
+            timeDelay += 600; // time for next transition
         }
-
-        inputMode = true;
+        // activate input after all blink methods complete
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                inputMode = true;
+            }
+        }, timeDelay);
     }
 
     @Override
