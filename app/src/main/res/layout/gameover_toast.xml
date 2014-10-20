@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gameover_toast_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray"
+        android:textColor="@android:color/white"
+        android:text="@string/gameover"
+        android:textSize="35sp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/gameovermessage"
+        android:textSize="20sp"
+        android:padding="15dp"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/gameover_toast_highscore"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="100sp"
+        android:paddingBottom="20dp"
+        android:gravity="center" />
+
+</LinearLayout>

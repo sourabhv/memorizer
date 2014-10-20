@@ -1,8 +1,6 @@
 package contagious.apps.memorizer;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
@@ -12,12 +10,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -128,15 +130,20 @@ public class MainActivity extends Activity {
     }
 
     private void gameReset() {
-        new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.gameover))
-                .setMessage(getString(R.string.gameovermessage) + Integer.toString(score))
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // do nothing
-                    }
-                }).show();
+        // game over toast
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.gameover_toast,
+                (ViewGroup) findViewById(R.id.gameover_toast_layout));
+        TextView toastHighscore = (TextView) layout.findViewById(R.id.gameover_toast_highscore);
+        toastHighscore.setText(Integer.toString(score));
+
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
+
+        // reset values
         realPattern.clear();
         userPattern.clear();
         gameRunning = false;

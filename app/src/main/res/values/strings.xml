@@ -5,7 +5,7 @@
     <string name="start">Start</string>
     <string name="score">Score:\u0020</string>
     <string name="gameover">Game Over</string>
-    <string name="gameovermessage">Your score is:\u0020</string>
+    <string name="gameovermessage">Your score is:</string>
     <string name="highscore">High Score:\u0020</string>
 
     <color name="light_red">#FFCACA</color>
@@ -16,4 +16,6 @@
     <color name="yellow">#FF8800</color>
     <color name="light_blue">#C5EAF8</color>
     <color name="blue">#0099CC</color>
+    <color name="gray">#999999</color>
+
 </resources>
