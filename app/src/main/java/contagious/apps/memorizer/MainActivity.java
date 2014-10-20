@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,13 +27,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-
 public class MainActivity extends Activity {
 
-    public static final int SET_TO_START = 0;
-    public static final int SET_TO_SCORE = 1;
-    public static final String HIGHSCORE_TAG = "highscore";
-    public static final String NONE = "none";
+    private static final int TIME_EASY = 600;
+    private static final int TIME_HARD = 400;
+    private static final int TIME_INSANE = 200;
+    private static final int FLASH_TIME = 300;
+    private static final int SET_TO_START = 0;
+    private static final int SET_TO_SCORE = 1;
+    private static final int LONG_TOAST_TIME = 3500;
+    private static final String HIGHSCORE_TAG = "highscore";
+    private static final String NONE = "none";
+
+    public static int BLINK_TIME = TIME_EASY;
 
     private boolean inputMode = false;
     private boolean gameRunning = false;
@@ -101,6 +108,28 @@ public class MainActivity extends Activity {
         startButton.setLayoutParams(params);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isFinishing())
+            soundPool.release();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT > 10) {
+            // set UI visibility flags
+            getWindow().getDecorView()
+                    .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                            | View.INVISIBLE);
+        }
+    }
+
     private int getHighscore() {
         String hs = sharedPreferences.getString(HIGHSCORE_TAG, NONE);
         if (hs.equals(NONE)) {
@@ -136,6 +165,11 @@ public class MainActivity extends Activity {
                 (ViewGroup) findViewById(R.id.gameover_toast_layout));
         TextView toastHighscore = (TextView) layout.findViewById(R.id.gameover_toast_highscore);
         toastHighscore.setText(Integer.toString(score));
+        if (score > highscore) {
+            TextView toastTitle = (TextView) layout.findViewById(R.id.gameover_toast_title);
+            toastTitle.setText(getResources().getString(R.string.newhighscore));
+            toastTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+        }
 
         Toast toast = new Toast(getApplicationContext());
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
@@ -145,11 +179,11 @@ public class MainActivity extends Activity {
 
         // flash the next color in pattern
         final int colorId = realPattern.get(userPattern.size());
-        for (int delay = 0; delay < (Toast.LENGTH_LONG - 600); delay += 600) {
+        for (int delay = 0; delay < LONG_TOAST_TIME - FLASH_TIME / 2; delay += FLASH_TIME / 2) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    colorViewList.get(colorId).blink();
+                    colorViewList.get(colorId).blink(FLASH_TIME / 2);
                 }
             }, delay);
         }
@@ -190,10 +224,10 @@ public class MainActivity extends Activity {
                 @Override
                 public void run() {
                     soundPool.play(sounds[x], 1.0f, 1.0f, 0, 0, 1);
-                    colorViewList.get(x).blink();
+                    colorViewList.get(x).blink(BLINK_TIME);
                 }
             }, timeDelay);
-            timeDelay += 600; // time for next transition
+            timeDelay += BLINK_TIME; // time for next transition
         }
         // activate input after all blink methods complete
         new Handler().postDelayed(new Runnable() {
@@ -201,22 +235,7 @@ public class MainActivity extends Activity {
             public void run() {
                 inputMode = true;
             }
-        }, timeDelay - 200); // -200 for those impatient people
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (Build.VERSION.SDK_INT > 10) {
-            // set UI visibility flags
-            getWindow().getDecorView()
-                    .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                            | View.INVISIBLE);
-        }
+        }, timeDelay - BLINK_TIME / 3); // -200 for those impatient people
     }
 
     public void startButtonClick(View view) {
@@ -236,7 +255,7 @@ public class MainActivity extends Activity {
                     // correct colorView selected
                     userPattern.add(tag);
                     soundPool.play(sounds[tag], 1.0f, 1.0f, 0, 0, 1);
-                    colorViewList.get(tag).blink();
+                    colorViewList.get(tag).blink(BLINK_TIME);
                     if (realPattern.size() == userPattern.size()) {
                         // one more point!
                         score++;

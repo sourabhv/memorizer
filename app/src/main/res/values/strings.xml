@@ -7,6 +7,7 @@
     <string name="gameover">Game Over</string>
     <string name="gameovermessage">Your score is:</string>
     <string name="highscore">High Score:\u0020</string>
+    <string name="newhighscore">New High Score!</string>
 
     <color name="light_red">#FFCACA</color>
     <color name="red">#CC0000</color>

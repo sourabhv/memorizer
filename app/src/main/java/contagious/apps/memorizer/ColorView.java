@@ -11,10 +11,10 @@ public class ColorView extends Button {
         super(context, attrs);
     }
 
-    public void blink() {
+    public void blink(int time) {
         TransitionDrawable transition = (TransitionDrawable) getBackground();
-        transition.startTransition(300);
-        transition.reverseTransition(300);
+        transition.startTransition(time / 2);
+        transition.reverseTransition(time / 2);
     }
 
 }
