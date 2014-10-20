@@ -183,7 +183,7 @@ public class MainActivity extends Activity {
             public void run() {
                 inputMode = true;
             }
-        }, timeDelay);
+        }, timeDelay - 200); // -200 for those impatient people
     }
 
     @Override
