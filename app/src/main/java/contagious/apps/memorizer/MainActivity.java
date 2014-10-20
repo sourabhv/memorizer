@@ -143,6 +143,17 @@ public class MainActivity extends Activity {
         toast.setView(layout);
         toast.show();
 
+        // flash the next color in pattern
+        final int colorId = realPattern.get(userPattern.size());
+        for (int delay = 0; delay < (Toast.LENGTH_LONG - 600); delay += 600) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    colorViewList.get(colorId).blink();
+                }
+            }, delay);
+        }
+
         // reset values
         realPattern.clear();
         userPattern.clear();
