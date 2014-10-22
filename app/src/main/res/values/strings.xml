@@ -3,7 +3,6 @@
 
     <string name="app_name">Memorizer</string>
     <string name="start">Start</string>
-    <string name="score">Score:\u0020</string>
     <string name="gameover">Game Over</string>
     <string name="gameovermessage">Your score is:</string>
     <string name="highscore">High Score:\u0020</string>

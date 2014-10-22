@@ -187,7 +187,7 @@ public class MainActivity extends Activity {
         if (mode == SET_TO_START) {
             startButton.setText(getResources().getString(R.string.start));
         } else if (mode == SET_TO_SCORE) {
-            startButton.setText(getResources().getString(R.string.score) + Integer.toString(score));
+            startButton.setText(Integer.toString(score));
         }
     }
 
@@ -212,6 +212,7 @@ public class MainActivity extends Activity {
         gameRunning = false;
         inputMode = false;
         score = 0;
+        startButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         updateButton(SET_TO_START);
     }
 
@@ -290,6 +291,7 @@ public class MainActivity extends Activity {
 
     public void onStartButtonClick(View view) {
         if (!gameRunning) {
+            startButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 35);
             gameRunning = true;
             showPattern();
             // hide the settingsButton
