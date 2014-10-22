@@ -8,6 +8,13 @@
     <string name="gameovermessage">Your score is:</string>
     <string name="highscore">High Score:\u0020</string>
     <string name="newhighscore">New High Score!</string>
+    <string name="settings">Settings</string>
+    <string name="settingsAllCaps">SETTINGS</string>
+    <string name="difficulty">Difficulty Level</string>
+    <string name="sound">Sound</string>
+    <string name="easy">Easy</string>
+    <string name="hard">Hard</string>
+    <string name="insane">Insane</string>
 
     <color name="light_red">#FFCACA</color>
     <color name="red">#CC0000</color>

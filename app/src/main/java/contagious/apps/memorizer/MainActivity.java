@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,16 +32,16 @@ import java.util.Random;
 public class MainActivity extends Activity {
 
     private static final int TIME_EASY = 600;
-    private static final int TIME_HARD = 400;
-    private static final int TIME_INSANE = 200;
-    private static final int FLASH_TIME = 300;
+    private static final int TIME_HARD = 300;
+    private static final int TIME_INSANE = 300;
     private static final int SET_TO_START = 0;
     private static final int SET_TO_SCORE = 1;
-    private static final int LONG_TOAST_TIME = 3500;
+    private static final int TOAST_TIME_LONG = 3500;
     private static final String HIGHSCORE_TAG = "highscore";
     private static final String NONE = "none";
 
-    public static int BLINK_TIME = TIME_EASY;
+    private static int BLINK_TIME = TIME_EASY;
+    private static int FLASH_TIME = 300;
 
     private boolean inputMode = false;
     private boolean gameRunning = false;
@@ -48,13 +50,23 @@ public class MainActivity extends Activity {
     private Random random = new Random();
     private int sounds[] = new int[]{-1, -1, -1, -1};
 
+    private Button startButton;
+    private Handler handler = new Handler();
+    private List<Runnable> transitionRunnables;
+    private ImageButton settingsButton;
+    private ImageButton restartButton;
+    private LinearLayout settingsView;
     private List<ColorView> colorViewList;
     private List<Integer> realPattern;
     private List<Integer> userPattern;
-    private Button startButton;
-    private TextView highscoreview;
     private SharedPreferences sharedPreferences;
     private SoundPool soundPool;
+    private TextView highscoreview;
+
+    // game over toast vars
+    TextView toastHighscore;
+    TextView toastTitle;
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +78,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // set audio stream to music/media
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+
+        startButton = (Button) findViewById(R.id.startButton);
+        transitionRunnables = new ArrayList<Runnable>();
+        settingsButton = (ImageButton) findViewById(R.id.settingsButton);
+        restartButton = (ImageButton) findViewById(R.id.restartButton);
+        settingsView = (LinearLayout) findViewById(R.id.settingsView);
         colorViewList = new ArrayList<ColorView>();
         colorViewList.add((ColorView) findViewById(R.id.red));
         colorViewList.add((ColorView) findViewById(R.id.green));
@@ -75,15 +93,26 @@ public class MainActivity extends Activity {
         colorViewList.add((ColorView) findViewById(R.id.blue));
         realPattern = new ArrayList<Integer>();
         userPattern = new ArrayList<Integer>();
-        startButton = (Button) findViewById(R.id.startButton);
-        highscoreview = (TextView) findViewById(R.id.highscoreview);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        highscoreview = (TextView) findViewById(R.id.highscoreview);
 
         highscore = getHighscore();
         displayHighscore();
 
-        // load sounds in sound pool
+        // make the game over toast
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.gameover_toast,
+                (ViewGroup) findViewById(R.id.gameover_toast_layout));
+        toastHighscore = (TextView) layout.findViewById(R.id.gameover_toast_highscore);
+        toastTitle = (TextView) layout.findViewById(R.id.gameover_toast_title);
 
+        toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+
+        // load sounds in sound pool
         try {
             // get assetFileDescriptors
             AssetFileDescriptor beep1 = getAssets().openFd("beep1.ogg");
@@ -111,13 +140,17 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (isFinishing())
+        toast.cancel();
+        soundPool.autoPause();
+        if (isFinishing()) {
             soundPool.release();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        soundPool.autoResume();
         if (Build.VERSION.SDK_INT > 10) {
             // set UI visibility flags
             getWindow().getDecorView()
@@ -158,28 +191,46 @@ public class MainActivity extends Activity {
         }
     }
 
+    // reset function for gameReset and onRestartButtonClick
+    private void metaGameReset(int resetTime) {
+        // show settingsButton and hide restartButton
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                settingsButton.setVisibility(View.VISIBLE);
+                restartButton.setVisibility(View.GONE);
+            }
+        }, resetTime);
+
+        // cancel all pending transitions
+        for (Runnable r : transitionRunnables)
+                handler.removeCallbacks(r);
+
+        // reset values
+        realPattern.clear();
+        userPattern.clear();
+        gameRunning = false;
+        inputMode = false;
+        score = 0;
+        updateButton(SET_TO_START);
+    }
+
     private void gameReset() {
         // game over toast
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.gameover_toast,
-                (ViewGroup) findViewById(R.id.gameover_toast_layout));
-        TextView toastHighscore = (TextView) layout.findViewById(R.id.gameover_toast_highscore);
         toastHighscore.setText(Integer.toString(score));
         if (score > highscore) {
-            TextView toastTitle = (TextView) layout.findViewById(R.id.gameover_toast_title);
             toastTitle.setText(getResources().getString(R.string.newhighscore));
             toastTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+        } else {
+            toastTitle.setText(getResources().getString(R.string.gameover));
+            toastTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 35);
         }
 
-        Toast toast = new Toast(getApplicationContext());
-        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setView(layout);
         toast.show();
 
         // flash the next color in pattern
         final int colorId = realPattern.get(userPattern.size());
-        for (int delay = 0; delay < LONG_TOAST_TIME - FLASH_TIME / 2; delay += FLASH_TIME / 2) {
+        for (int delay = 0; delay < TOAST_TIME_LONG - FLASH_TIME / 2; delay += FLASH_TIME / 2) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -188,21 +239,15 @@ public class MainActivity extends Activity {
             }, delay);
         }
 
-        // reset values
-        realPattern.clear();
-        userPattern.clear();
-        gameRunning = false;
-        inputMode = false;
         // handle score
         if (score > highscore) {
             highscore = score;
             setHighscore(highscore);
             displayHighscore();
         }
-        score = 0;
-        updateButton(SET_TO_START);
-    }
 
+        metaGameReset(TOAST_TIME_LONG);
+    }
 
     private void addNewPatternStep() {
         int next = random.nextInt(colorViewList.size());
@@ -218,30 +263,39 @@ public class MainActivity extends Activity {
         updateButton(SET_TO_SCORE);
 
         // flash all colorViews one by one
+        transitionRunnables.clear();
         int timeDelay = 1500; // initial delay before starting transitions
         for (final Integer x: realPattern) {
-            new Handler().postDelayed(new Runnable() {
+            Runnable r = new Runnable() {
                 @Override
                 public void run() {
                     soundPool.play(sounds[x], 1.0f, 1.0f, 0, 0, 1);
                     colorViewList.get(x).blink(BLINK_TIME);
                 }
-            }, timeDelay);
+            };
+            handler.postDelayed(r, timeDelay);
+            transitionRunnables.add(r);
             timeDelay += BLINK_TIME; // time for next transition
         }
         // activate input after all blink methods complete
-        new Handler().postDelayed(new Runnable() {
+        Runnable r = new Runnable() {
             @Override
             public void run() {
                 inputMode = true;
             }
-        }, timeDelay - BLINK_TIME / 3); // -200 for those impatient people
+        };
+        handler.postDelayed(r, timeDelay - BLINK_TIME / 3); // (- BLINK_TIME / 3) for those impatient people
+        transitionRunnables.add(r);
     }
 
-    public void startButtonClick(View view) {
+    public void onStartButtonClick(View view) {
         if (!gameRunning) {
             gameRunning = true;
             showPattern();
+            // hide the settingsButton
+            settingsButton.setVisibility(View.GONE);
+            // show the restart button
+            restartButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -269,6 +323,37 @@ public class MainActivity extends Activity {
                 // should never happen
             }
         }
+    }
+
+    public void onRestartButtonClick(View view) {
+        metaGameReset(0);
+    }
+
+    public void onSettingsButtonClick(View view) {
+        settingsView.setVisibility(View.VISIBLE);
+    }
+
+    public void onSettingsPaneCrossClick(View view) {
+        settingsView.setVisibility(View.GONE);
+    }
+
+    public void onDifficultyButtonClick(View view) {
+        String tag = view.getTag().toString();
+        if (tag.equals("1")) { // easy
+            BLINK_TIME = TIME_EASY;
+            Toast.makeText(this, "Difficulty set to Easy!", Toast.LENGTH_SHORT).show();
+        } else if (tag.equals("2")) { // hard
+            BLINK_TIME = TIME_HARD;
+            Toast.makeText(this, "Difficulty set to Hard!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (settingsView.getVisibility() == View.GONE)
+            super.onBackPressed();
+        else
+            settingsView.setVisibility(View.GONE);
     }
 
 }

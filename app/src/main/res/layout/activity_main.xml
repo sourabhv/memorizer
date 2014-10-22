@@ -8,12 +8,14 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
+        android:background="@android:color/white"
         android:weightSum="2">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:background="@android:color/white"
             android:weightSum="2"
             android:orientation="horizontal">
 
@@ -42,6 +44,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:weightSum="2"
+            android:background="@android:color/white"
             android:orientation="horizontal"
             android:onClick="onColorViewClick" >
 
@@ -76,7 +79,7 @@
         android:textSize="20sp"
         android:gravity="center"
         android:layout_centerInParent="true"
-        android:onClick="startButtonClick" />
+        android:onClick="onStartButtonClick" />
 
     <TextView
         android:id="@+id/highscoreview"
@@ -87,6 +90,131 @@
         android:paddingBottom="5dp"
         android:background="@android:color/white"
         android:textSize="20sp"
-        android:gravity="center"/>
+        android:gravity="center" />
+
+    <ImageButton
+        android:id="@+id/settingsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="10dp"
+        android:src="@drawable/gear"
+        android:contentDescription="@string/settings"
+        android:background="@android:color/transparent"
+        android:onClick="onSettingsButtonClick" />
+
+    <ImageButton
+        android:id="@+id/restartButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="10dp"
+        android:src="@drawable/refresh"
+        android:contentDescription="@string/settings"
+        android:background="@android:color/transparent"
+        android:onClick="onRestartButtonClick"
+        android:visibility="gone" />
+
+    <!-- Settings Page -->
+    <!-- should use a fragment but its not supported in 2.3 -->
+
+    <LinearLayout
+        android:id="@+id/settingsView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:background="@color/gray"
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        android:clickable="true"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/settingsAllCaps"
+                android:textSize="35sp"
+                android:gravity="center"
+                android:textColor="@android:color/white" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/cross"
+                android:contentDescription="@android:string/cancel"
+                android:background="@android:color/transparent"
+                android:padding="15dp"
+                android:onClick="onSettingsPaneCrossClick" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="15dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/difficulty"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/easy"
+                android:tag="1"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:onClick="onDifficultyButtonClick" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/hard"
+                android:tag="2"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:onClick="onDifficultyButtonClick" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="15dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/sound"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp" />
+
+    </LinearLayout>
 
 </RelativeLayout>
