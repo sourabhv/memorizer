@@ -72,10 +72,6 @@ public class MainActivity extends Activity {
         }
     }
 
-    // reset function for gameReset and onRestartButtonClick
-    private void metaGameReset(int resetTime) {
-    }
-
     private void gameReset(boolean showAlertDialog) {
         // alert dialog
         if (showAlertDialog)
