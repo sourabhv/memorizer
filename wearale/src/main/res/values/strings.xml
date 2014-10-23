@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Memorizer</string>
+    <string name="go">Go</string>
+    <string name="gameover">Game Over</string>
+    <string name="gameovermessage">Your score is:</string>
+
+    <color name="light_red">#FFCACA</color>
+    <color name="red">#CC0000</color>
+    <color name="light_green">#E2F0B6</color>
+    <color name="green">#669900</color>
+    <color name="light_yellow">#FFECC0</color>
+    <color name="yellow">#FF8800</color>
+    <color name="light_blue">#C5EAF8</color>
+    <color name="blue">#0099CC</color>
+    <color name="gray">#666666</color>
+
+</resources>

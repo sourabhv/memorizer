@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:weightSum="2"
+            android:orientation="horizontal">
+
+            <contagious.games.memorizer.ColorView
+                android:id="@+id/red"
+                android:tag="0"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/blinktransition_red"
+                android:onClick="onColorViewClick" />
+
+            <contagious.games.memorizer.ColorView
+                android:id="@+id/green"
+                android:tag="1"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/blinktransition_green"
+                android:onClick="onColorViewClick" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:weightSum="2"
+            android:orientation="horizontal" >
+
+            <contagious.games.memorizer.ColorView
+                android:id="@+id/yellow"
+                android:tag="2"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/blinktransition_yellow"
+                android:onClick="onColorViewClick" />
+
+            <contagious.games.memorizer.ColorView
+                android:id="@+id/blue"
+                android:tag="3"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/blinktransition_blue"
+                android:onClick="onColorViewClick" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/roundtextview"
+        android:text="@string/go"
+        android:textSize="15sp"
+        android:textColor="@color/gray"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:onClick="onStartButtonClick" />
+
+</RelativeLayout>
