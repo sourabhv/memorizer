@@ -3,6 +3,7 @@ package contagious.apps.memorizer;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
@@ -100,6 +101,7 @@ public class MainActivity extends Activity {
         soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         highscoreview = (TextView) findViewById(R.id.highscoreview);
 
+        // set highscore
         highscore = getHighscore();
         displayHighscore();
 
@@ -119,6 +121,19 @@ public class MainActivity extends Activity {
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
         toast.setDuration(Toast.LENGTH_LONG);
         toast.setView(layout);
+
+        // set font
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/OpenSansLight.ttf");
+        startButton.setTypeface(font);
+        highscoreview.setTypeface(font);
+        ((TextView) findViewById(R.id.settingsViewTitle)).setTypeface(font);
+        ((TextView) findViewById(R.id.settingsDifficultyTitle)).setTypeface(font);
+        ((TextView) findViewById(R.id.settingsButtonEasy)).setTypeface(font);
+        ((TextView) findViewById(R.id.settingsButtonHard)).setTypeface(font);
+        ((TextView) findViewById(R.id.settingsSoundTitle)).setTypeface(font);
+        toastHighscore.setTypeface(font);
+        toastTitle.setTypeface(font);
+        ((TextView) layout.findViewById(R.id.gameoverToastMessage)).setTypeface(font);
 
         // load sounds in sound pool
         try {

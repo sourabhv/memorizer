@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -129,8 +130,7 @@
         android:background="@color/gray"
         android:orientation="vertical"
         android:paddingTop="10dp"
-        android:clickable="true"
-        android:visibility="gone">
+        android:clickable="true">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -140,6 +140,7 @@
             android:layout_marginBottom="20dp">
 
             <TextView
+                android:id="@+id/settingsViewTitle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -162,6 +163,7 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/settingsDifficultyTitle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -178,6 +180,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/settingsButtonEasy"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -188,6 +191,7 @@
                 android:onClick="onDifficultyButtonClick" />
 
             <Button
+                android:id="@+id/settingsButtonHard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -200,6 +204,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/settingsSoundTitle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
