@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class MainActivity extends Activity {
     private static final int SET_TO_SCORE = 1;
     private static final int TOAST_TIME_LONG = 3500;
     private static final String HIGHSCORE_TAG = "highscore";
+    private static final String SOUND_TAG = "sound";
     private static final String NONE = "none";
 
     private static int BLINK_TIME = TIME_EASY;
@@ -47,6 +49,7 @@ public class MainActivity extends Activity {
     private boolean gameRunning = false;
     private int score = 0;
     private int highscore;
+    private boolean soundStatus;
     private Random random = new Random();
     private int sounds[] = new int[]{-1, -1, -1, -1};
 
@@ -99,6 +102,11 @@ public class MainActivity extends Activity {
 
         highscore = getHighscore();
         displayHighscore();
+
+        // set sound
+        ToggleButton soundToggleButton = (ToggleButton) findViewById(R.id.soundToggleButton);
+        soundStatus = sharedPreferences.getBoolean(SOUND_TAG, true);
+        soundToggleButton.setChecked(soundStatus);
 
         // make the game over toast
         LayoutInflater inflater = getLayoutInflater();
@@ -270,7 +278,8 @@ public class MainActivity extends Activity {
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    soundPool.play(sounds[x], 1.0f, 1.0f, 0, 0, 1);
+                    if (soundStatus)
+                        soundPool.play(sounds[x], 1.0f, 1.0f, 0, 0, 1);
                     colorViewList.get(x).blink(BLINK_TIME);
                 }
             };
@@ -310,7 +319,8 @@ public class MainActivity extends Activity {
                 if (realPattern.get(userPattern.size()) == tag) {
                     // correct colorView selected
                     userPattern.add(tag);
-                    soundPool.play(sounds[tag], 1.0f, 1.0f, 0, 0, 1);
+                    if (soundStatus)
+                        soundPool.play(sounds[tag], 1.0f, 1.0f, 0, 0, 1);
                     colorViewList.get(tag).blink(BLINK_TIME);
                     if (realPattern.size() == userPattern.size()) {
                         // one more point!
@@ -356,6 +366,13 @@ public class MainActivity extends Activity {
             super.onBackPressed();
         else
             settingsView.setVisibility(View.GONE);
+    }
+
+    public void onSoundToggleButtonClicked(View view) {
+        soundStatus = ((ToggleButton) view).isChecked();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(SOUND_TAG, soundStatus);
+        editor.apply();
     }
 
 }

@@ -210,10 +210,16 @@
             android:textSize="25sp" />
 
         <ToggleButton
+            android:id="@+id/soundToggleButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:button="@drawable/custom_toggle"
+            android:textOff=""
+            android:textOn=""
+            android:onClick="onSoundToggleButtonClicked" />
 
     </LinearLayout>
 
