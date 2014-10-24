@@ -130,7 +130,8 @@
         android:background="@color/gray"
         android:orientation="vertical"
         android:paddingTop="10dp"
-        android:clickable="true">
+        android:clickable="true"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="fill_parent"
