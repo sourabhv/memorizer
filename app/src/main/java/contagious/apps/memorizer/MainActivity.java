@@ -41,9 +41,10 @@ public class MainActivity extends Activity {
     private static final int TOAST_TIME_LONG = 3500;
     private static final String HIGHSCORE_TAG = "highscore";
     private static final String SOUND_TAG = "sound";
+    private static final String BLINK_TIME_TAG = "blink_time";
     private static final String NONE = "none";
 
-    private static int BLINK_TIME = TIME_EASY;
+    private static int BLINK_TIME;
     private static int FLASH_TIME = 300;
 
     private boolean inputMode = false;
@@ -105,10 +106,13 @@ public class MainActivity extends Activity {
         highscore = getHighscore();
         displayHighscore();
 
-        // set sound
+        // set sound and blink time
+        // default values will used without going into sharedPreferences
+        // unless the user changes them at least once -- simple neat trick :)
         ToggleButton soundToggleButton = (ToggleButton) findViewById(R.id.soundToggleButton);
         soundStatus = sharedPreferences.getBoolean(SOUND_TAG, true);
         soundToggleButton.setChecked(soundStatus);
+        BLINK_TIME = sharedPreferences.getInt(BLINK_TIME_TAG, TIME_EASY);
 
         // make the game over toast
         LayoutInflater inflater = getLayoutInflater();
@@ -373,6 +377,9 @@ public class MainActivity extends Activity {
             BLINK_TIME = TIME_HARD;
             Toast.makeText(this, "Difficulty set to Hard!", Toast.LENGTH_SHORT).show();
         }
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(BLINK_TIME_TAG, BLINK_TIME);
+        editor.apply();
     }
 
     @Override
