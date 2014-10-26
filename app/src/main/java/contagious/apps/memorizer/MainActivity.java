@@ -34,18 +34,19 @@ import java.util.Random;
 public class MainActivity extends Activity {
 
     private static final int TIME_EASY = 600;
-    private static final int TIME_HARD = 300;
-    private static final int TIME_INSANE = 300;
+    private static final int TIME_HARD_INSANE = 300;
     private static final int SET_TO_START = 0;
     private static final int SET_TO_SCORE = 1;
     private static final int TOAST_TIME_LONG = 3500;
     private static final String HIGHSCORE_TAG = "highscore";
     private static final String SOUND_TAG = "sound";
     private static final String BLINK_TIME_TAG = "blink_time";
+    private static final String INSANE_MODE_TAG = "insane_mode";
     private static final String NONE = "none";
 
     private static int BLINK_TIME;
     private static int FLASH_TIME = 300;
+    private static boolean INSANE_MODE;
 
     private boolean inputMode = false;
     private boolean gameRunning = false;
@@ -113,6 +114,7 @@ public class MainActivity extends Activity {
         soundStatus = sharedPreferences.getBoolean(SOUND_TAG, true);
         soundToggleButton.setChecked(soundStatus);
         BLINK_TIME = sharedPreferences.getInt(BLINK_TIME_TAG, TIME_EASY);
+        INSANE_MODE = sharedPreferences.getBoolean(INSANE_MODE_TAG, false);
 
         // make the game over toast
         LayoutInflater inflater = getLayoutInflater();
@@ -134,6 +136,7 @@ public class MainActivity extends Activity {
         ((TextView) findViewById(R.id.settingsDifficultyTitle)).setTypeface(font);
         ((TextView) findViewById(R.id.settingsButtonEasy)).setTypeface(font);
         ((TextView) findViewById(R.id.settingsButtonHard)).setTypeface(font);
+        ((TextView) findViewById(R.id.settingsButtonInsane)).setTypeface(font);
         ((TextView) findViewById(R.id.settingsSoundTitle)).setTypeface(font);
         toastHighscore.setTypeface(font);
         toastTitle.setTypeface(font);
@@ -277,6 +280,10 @@ public class MainActivity extends Activity {
         metaGameReset(TOAST_TIME_LONG);
     }
 
+    private void swapColorViews() {
+        // complete is unholy method
+    }
+
     private void addNewPatternStep() {
         int next = random.nextInt(colorViewList.size());
         realPattern.add(next);
@@ -289,6 +296,10 @@ public class MainActivity extends Activity {
         addNewPatternStep();
         // update score on center button
         updateButton(SET_TO_SCORE);
+
+        // swap colors for insane mode
+        if (score > 0 && score % 5 == 0)
+            swapColorViews();
 
         // flash all colorViews one by one
         transitionRunnables.clear();
@@ -372,13 +383,20 @@ public class MainActivity extends Activity {
         String tag = view.getTag().toString();
         if (tag.equals("1")) { // easy
             BLINK_TIME = TIME_EASY;
-            Toast.makeText(this, "Difficulty set to Easy!", Toast.LENGTH_SHORT).show();
+            INSANE_MODE = false;
+            Toast.makeText(this, "Difficulty: Boring!", Toast.LENGTH_SHORT).show();
         } else if (tag.equals("2")) { // hard
-            BLINK_TIME = TIME_HARD;
-            Toast.makeText(this, "Difficulty set to Hard!", Toast.LENGTH_SHORT).show();
+            BLINK_TIME = TIME_HARD_INSANE;
+            INSANE_MODE = false;
+            Toast.makeText(this, "Difficulty: Bring It On!", Toast.LENGTH_SHORT).show();
+        } else if (tag.equals("3")) {
+            BLINK_TIME = TIME_HARD_INSANE;
+            INSANE_MODE = true;
+            Toast.makeText(this, "Difficulty: OH GOD! WHY?!", Toast.LENGTH_SHORT).show();
         }
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(BLINK_TIME_TAG, BLINK_TIME);
+        editor.putBoolean(INSANE_MODE_TAG, INSANE_MODE);
         editor.apply();
     }
 
