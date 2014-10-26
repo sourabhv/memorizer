@@ -189,7 +189,8 @@
                 android:tag="1"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
-                android:onClick="onDifficultyButtonClick" />
+                android:onClick="onDifficultyButtonClick"
+                android:background="@drawable/button" />
 
             <Button
                 android:id="@+id/settingsButtonHard"
@@ -200,7 +201,8 @@
                 android:tag="2"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
-                android:onClick="onDifficultyButtonClick" />
+                android:onClick="onDifficultyButtonClick"
+                android:background="@drawable/button" />
 
         </LinearLayout>
 
